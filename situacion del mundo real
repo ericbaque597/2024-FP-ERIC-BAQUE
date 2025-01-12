@@ -1,0 +1,92 @@
+# Sistema de Reservas de Hotel usando POO
+
+class Habitacion:
+    def __init__(self, numero, tipo, precio):
+        self.numero = numero
+        self.tipo = tipo
+        self.precio = precio
+        self.ocupada = False
+
+    def reservar(self):
+        if not self.ocupada:
+            self.ocupada = True
+            return True
+        return False
+
+    def liberar(self):
+        if self.ocupada:
+            self.ocupada = False
+            return True
+        return False
+
+class Cliente:
+    def __init__(self, nombre, documento):
+        self.nombre = nombre
+        self.documento = documento
+
+class Reserva:
+    def __init__(self, cliente, habitacion):
+        self.cliente = cliente
+        self.habitacion = habitacion
+
+    def confirmar_reserva(self):
+        if self.habitacion.reservar():
+            print(f"Reserva confirmada para {self.cliente.nombre} en la habitación {self.habitacion.numero}.")
+        else:
+            print(f"La habitación {self.habitacion.numero} ya está ocupada.")
+
+    def cancelar_reserva(self):
+        if self.habitacion.liberar():
+            print(f"Reserva cancelada para la habitación {self.habitacion.numero}.")
+        else:
+            print(f"La habitación {self.habitacion.numero} no estaba reservada.")
+
+class Hotel:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self.habitaciones = []
+
+    def agregar_habitacion(self, habitacion):
+        self.habitaciones.append(habitacion)
+
+    def mostrar_habitaciones_disponibles(self):
+        disponibles = [hab for hab in self.habitaciones if not hab.ocupada]
+        if disponibles:
+            print("Habitaciones disponibles:")
+            for hab in disponibles:
+                print(f"Número: {hab.numero}, Tipo: {hab.tipo}, Precio: ${hab.precio}")
+        else:
+            print("No hay habitaciones disponibles.")
+
+# Ejemplo de uso
+def main():
+    # Crear hotel
+    hotel = Hotel("Hotel Paraíso")
+
+    # Agregar habitaciones
+    hotel.agregar_habitacion(Habitacion(101, "Individual", 50))
+    hotel.agregar_habitacion(Habitacion(102, "Doble", 75))
+    hotel.agregar_habitacion(Habitacion(103, "Suite", 120))
+
+    # Crear cliente
+    cliente = Cliente("Juan Pérez", "12345678")
+
+    # Mostrar habitaciones disponibles
+    hotel.mostrar_habitaciones_disponibles()
+
+    # Realizar reserva
+    habitacion_a_reservar = hotel.habitaciones[0]
+    reserva = Reserva(cliente, habitacion_a_reservar)
+    reserva.confirmar_reserva()
+
+    # Mostrar habitaciones disponibles tras la reserva
+    hotel.mostrar_habitaciones_disponibles()
+
+    # Cancelar reserva
+    reserva.cancelar_reserva()
+
+    # Mostrar habitaciones disponibles tras la cancelación
+    hotel.mostrar_habitaciones_disponibles()
+
+if __name__ == "__main__":
+    main()
